@@ -2303,26 +2303,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\USER\\.nuget\\packages\\": {}
+    "/Users/davidcombita/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+      "projectUniqueName": "/Users/davidcombita/DistriLab2/DistriLab2/DistriLab2/DistriLab2.csproj",
       "projectName": "DistriLab2",
-      "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
-      "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-      "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\obj\\",
+      "projectPath": "/Users/davidcombita/DistriLab2/DistriLab2/DistriLab2/DistriLab2.csproj",
+      "packagesPath": "/Users/davidcombita/.nuget/packages/",
+      "outputPath": "/Users/davidcombita/DistriLab2/DistriLab2/DistriLab2/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/davidcombita/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2379,7 +2377,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
       }
     }
   }

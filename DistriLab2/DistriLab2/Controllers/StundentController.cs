@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.AspNetCore.JsonPatch;
 
 using DistriLab2.Models;
 using DistriLab2.Models.DB;
@@ -76,18 +75,6 @@ namespace DistriLab2.Controllers
             return Ok(update);
         }
 
-        [HttpPatch]
-        [Route("editStudent/{id}")]
-        public async Task<ActionResult> Patch(string id, JsonPatchDocument<Student> _student)
-        {
-            var student= await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            _student.ApplyTo(student, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-            await _context.SaveChangesAsync();
-            return Ok(student);
-        }
+     
     }
 }
