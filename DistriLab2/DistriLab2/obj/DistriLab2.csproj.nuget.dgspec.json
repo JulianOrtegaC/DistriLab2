@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\David\\source\\repos\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\David\\source\\repos\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\David\\source\\repos\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "projectName": "DistriLab2",
-        "projectPath": "C:\\Users\\David\\source\\repos\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
-        "packagesPath": "C:\\Users\\David\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\David\\source\\repos\\DistriLab2\\DistriLab2\\obj\\",
+        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\David\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

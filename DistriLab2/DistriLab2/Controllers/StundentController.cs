@@ -1,12 +1,9 @@
-﻿
-
- using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.JsonPatch;
 
 using DistriLab2.Models;
 using DistriLab2.Models.DB;
-using Microsoft.AspNetCore.Mvc;
 
 using System;
 
@@ -28,7 +25,7 @@ namespace DistriLab2.Controllers
         [Route("getStudent")]
         public ActionResult<Student> GetPerson()
         {
-            var client = _context.Students.ToList();
+            var client = _context.Students.Take(20).ToList();
             return Ok(client);
         }
 
@@ -79,8 +76,8 @@ namespace DistriLab2.Controllers
             return Ok(update);
         }
 
-        [HttpPatch("{id}")]
-        [Route("editStudent")]
+        [HttpPatch]
+        [Route("editStudent/{id}")]
         public async Task<ActionResult> Patch(string id, JsonPatchDocument<Student> _student)
         {
             var student= await _context.Students.FindAsync(id);
@@ -88,13 +85,9 @@ namespace DistriLab2.Controllers
             {
                 return NotFound();
             }
-
             _student.ApplyTo(student, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-
             await _context.SaveChangesAsync();
             return Ok(student);
         }
-
-
     }
 }
