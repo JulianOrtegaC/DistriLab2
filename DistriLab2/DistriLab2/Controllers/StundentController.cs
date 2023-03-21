@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-using Microsoft.AspNetCore.JsonPatch;
-
 using DistriLab2.Models;
 using DistriLab2.Models.DB;
-
 using System;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace DistriLab2.Controllers
@@ -29,27 +26,61 @@ namespace DistriLab2.Controllers
             return Ok(client);
         }
 
-        [HttpPost]
-        [Route("addStudent")]
-        public async Task<IActionResult> AddSubasta(Student student)
+
+        // GET: api/Student/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Student>> GetStudent(int id)
         {
+            var student = await _context.Students.FindAsync(id);
 
-
-            Student stuAux = new()
+            if (student == null)
             {
-            CodStudent = student.CodStudent,
-            FirstNameStudent = student.FirstNameStudent,
-            LastNameStudent = student.LastNameStudent,
-            TypeDocument = student.TypeDocument,
-            NumDocument = student.NumDocument,
-            StatusStudent = student.StatusStudent,
-            GenderStudent = student.GenderStudent 
-            };
-            Student studentAux = _context.Students.Add(stuAux).Entity;
-            await _context.SaveChangesAsync();
-            return Created($"/Student/{stuAux.CodStudent}", stuAux);
+                return NotFound();
+            }
 
+            return student;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Student>> CreateStudent(Student student)
+        {
+            student.CodStudent = GenerarCodigo(_context);
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetStudent), new { id = student.CodStudent }, student);
+        }
+
+        public static int GenerarCodigo(dblab2Context context)
+        {
+            int year = DateTime.Now.Year;
+            int semestre = (DateTime.Now.Month <= 6) ? 1 : 2;
+            int contador = 1;
+            int codigoGenerado;
+            bool codigoExiste;
+
+            do
+            {
+                codigoGenerado = Int32.Parse($"{year}{semestre}{contador:D5}");
+                codigoExiste = ExisteCodigo(context, codigoGenerado);
+
+                if (codigoExiste)
+                {
+                    contador++;
+                }
+
+            } while (codigoExiste);
+
+            return codigoGenerado;
+        }
+
+
+        public static bool ExisteCodigo(dblab2Context dbContext, int codigoGenerado)
+        {
+            return dbContext.Students.Any(e => e.CodStudent == codigoGenerado);
+        }
+
+
 
         [HttpPut]
         [Route("editStudent")]
@@ -75,18 +106,6 @@ namespace DistriLab2.Controllers
             return Ok(update);
         }
 
-        [HttpPatch]
-        [Route("editStudent/{id}")]
-        public async Task<ActionResult> Patch(string id, JsonPatchDocument<Student> _student)
-        {
-            var student= await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            _student.ApplyTo(student, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-            await _context.SaveChangesAsync();
-            return Ok(student);
-        }
+
     }
 }
