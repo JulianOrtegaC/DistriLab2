@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DistriLab2.Models.DB.Student>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstNameStudent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastNameStudent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeDocument)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumDocument)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusStudent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GenderStudent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstNameStudent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastNameStudent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeDocument)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumDocument)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusStudent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GenderStudent)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CodStudent">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CodStudent">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CodStudent">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -31,7 +31,7 @@ namespace DistriLab2.Controllers
 
         [HttpPost]
         [Route("addStudent")]
-        public async Task<IActionResult> AddSubasta(StudentXD student)
+        public async Task<IActionResult> AddSubasta(Student student)
         {
 
 
@@ -43,8 +43,7 @@ namespace DistriLab2.Controllers
             TypeDocument = student.TypeDocument,
             NumDocument = student.NumDocument,
             StatusStudent = student.StatusStudent,
-            GenderStudent = student.GenderStudent,
-            Inscriptions =  null
+            GenderStudent = student.GenderStudent 
             };
             Student studentAux = _context.Students.Add(stuAux).Entity;
             await _context.SaveChangesAsync();
@@ -54,7 +53,7 @@ namespace DistriLab2.Controllers
 
         [HttpPut]
         [Route("editStudent")]
-        public async Task<IActionResult> Put(StudentXD student)
+        public async Task<IActionResult> Put(Student student)
         {
             var update = await _context.Students.FindAsync(student.CodStudent);
 

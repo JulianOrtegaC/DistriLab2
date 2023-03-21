@@ -12,6 +12,7 @@ namespace DistriLab2.Models.DB
 
         public int CodSubject { get; set; }
         public string NameSubject { get; set; } = null!;
+        
         public int Quotas { get; set; }
         public string StatusSubject { get; set; } = null!;
 
