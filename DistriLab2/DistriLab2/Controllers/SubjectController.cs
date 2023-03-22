@@ -29,7 +29,8 @@ namespace DistriLab2.Controllers
         [HttpGet]
         [Route("getSubject/{CodSubject}")]
         public ActionResult<Subject> GetSubject(int CodSubject){
-            try{
+            try
+            {
                 var client = _context.Subjects.FindAsync(CodSubject);
                 return Ok(client);
             }
@@ -54,7 +55,7 @@ namespace DistriLab2.Controllers
             return Created($"/Subject/{subAux.CodSubject}", subAux);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("updateSubject/{CodSubject}")]
         public async Task<IActionResult> updateSubject(int CodSubject, string NameSubject){
             try {
@@ -73,8 +74,30 @@ namespace DistriLab2.Controllers
         }
 
         [HttpPatch]
-        [Route("editSubjectName")]
-        public async Task<IActionResult> Put(Subject subject){
+        [Route("updateStateSubject/{CodSubject}")]
+        public async Task<IActionResult> updateStatusSubject(int CodSubject, string StatusSubject)
+        {
+            try
+            {
+                var subject = await _context.Subjects.FindAsync(CodSubject);
+                if (subject == null)
+                {
+                    return NotFound();
+                }
+                subject.StatusSubject = StatusSubject;
+                await _context.SaveChangesAsync();
+                return Ok(subject);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut]
+        [Route("editSubject")]
+        public async Task<IActionResult> PatchSubject(Subject subject){
             var update = await _context.Subjects.FindAsync(subject.CodSubject);
 
             if (update == null)
@@ -105,6 +128,7 @@ namespace DistriLab2.Controllers
             await _context.SaveChangesAsync();
             return Ok(subject);
         }
+
 	}
 }
 
