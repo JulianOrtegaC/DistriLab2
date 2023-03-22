@@ -1,12 +1,17 @@
 ﻿using DistriLab2.Models.DB;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DistriLab2.Controllers
 {
     public class InscriptionController : Controller
     {
         private readonly dblab2Context _context;
+        private string TEXT_ALERT_STUDENT = "EL ESTUDIANTE NO SE ENCUENTRA ACTIVO";
+        private string TEXT_ALERT_SUBJECT = "LA MATERIA NO SE ENCUENTRA ACTIVA";
+        private string TEXT_ALERT_READY_INSCRIPTION = "LA MATERIA YA SE ENCUENTRA INSCRITA";
+        private string NOT_FOUND_INSCRIPTION = "LA INSCRIPCIÓN NO EXISTE";
 
         public InscriptionController(dblab2Context context)
         {
@@ -14,23 +19,43 @@ namespace DistriLab2.Controllers
         }
 
         [HttpGet]
-        [Route("getInscription")]
-        public ActionResult<Inscription> GetInscription()
+        [Route("getInscriptions")]
+        public ActionResult<Inscription> GetInscriptions()
         {
             var client = _context.Inscriptions.Take(20).ToList();
             return Ok(client);
         }
 
+        [HttpGet]
+        [Route("getInscription/{id}")]
+        public async Task<ActionResult<Inscription>> GetInscription(int id)
+        {
+            var inscription = await _context.Inscriptions.FindAsync(id);
+
+            if (inscription == null)
+            {
+                return NotFound();
+            }
+
+            return inscription;
+        }
+
         [HttpPost]
         [Route("addInscription")]
-        public async Task<IActionResult> AddInscription(Inscription inscription)
+        public async Task<IActionResult> AddInscription(int codStudent, int codSubject, DateTime dateRegistration)
         {
+            if (validateActiveSubject(codSubject, _context))
+                return BadRequest(TEXT_ALERT_SUBJECT);
+            if (validateActiveStudent(codStudent, _context))
+                return BadRequest(TEXT_ALERT_STUDENT);
+            if (validateNotInscription(codSubject, codStudent,_context))
+                return BadRequest(TEXT_ALERT_READY_INSCRIPTION);
             Inscription inscriptionAux = new()
             {
-                IdInscription = inscription.IdInscription,
-                CodStudent = inscription.CodStudent,
-                CodSubject = inscription.CodSubject,
-                DateRegistration = inscription.DateRegistration
+                IdInscription = incrementId(_context) + 1,
+                CodStudent = codStudent,
+                CodSubject = codSubject,
+                DateRegistration = dateRegistration
             };
             Inscription auxins = _context.Inscriptions.Add(inscriptionAux).Entity;
             await _context.SaveChangesAsync();
@@ -39,37 +64,108 @@ namespace DistriLab2.Controllers
 
         [HttpPut]
         [Route("editInscription")]
-        public async Task<IActionResult> Put(Inscription inscription)
+        public async Task<IActionResult> Put(int idInscription, int codStudent, int codSubject, DateTime dateRegistration)
         {
-            var update = await _context.Inscriptions.FindAsync(inscription.IdInscription);
-
+            var update = await _context.Inscriptions.FindAsync(idInscription);
+            if (validateActiveSubject(codSubject, _context))
+                return BadRequest(TEXT_ALERT_SUBJECT);
+            if (validateActiveStudent(codStudent, _context))
+                return BadRequest(TEXT_ALERT_STUDENT);
+            if (validateNotInscription(codSubject, codStudent, _context))
+                return BadRequest(TEXT_ALERT_READY_INSCRIPTION);
             if (update == null)
-                return BadRequest();
-            update.IdInscription = inscription.IdInscription;
-            update.CodStudent = inscription.CodStudent;
-            update.CodSubject = inscription.CodSubject;
-            update.DateRegistration = inscription.DateRegistration;
-          
+                return NotFound(NOT_FOUND_INSCRIPTION);
+            update.IdInscription = idInscription;
+            update.CodStudent = codStudent;
+            update.CodSubject = codSubject;
+            update.DateRegistration = dateRegistration;
+
             var aux = await _context.SaveChangesAsync() > 0;
             if (!aux)
-            {
                 return NoContent();
-            }
             return Ok(update);
+        } 
+
+        [HttpPatch]
+        [Route("updateCodeSubject/{idInscription}")]
+        public async Task<IActionResult> updateInscriptionCodeSubject(int idInscription, int codeSubject)
+        {
+            try
+            {
+                var inscription = await _context.Inscriptions.FindAsync(idInscription);
+                if (inscription == null)
+                    return NotFound(NOT_FOUND_INSCRIPTION);
+                if (validateActiveSubject(codeSubject, _context))
+                    return BadRequest(TEXT_ALERT_SUBJECT);
+                inscription.CodSubject = codeSubject;
+                await _context.SaveChangesAsync();
+                return Ok(inscription);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPatch]
-        [Route("editInscription/{id}")]
-        public async Task<ActionResult> Patch(string id, JsonPatchDocument<Inscription> _inscription)
+        [Route("updateCodeStudent/{idInscription}")]
+        public async Task<IActionResult> updateInscriptionCodeStudent(int idInscription, int codeStudent)
         {
-            var inscription = await _context.Inscriptions.FindAsync(id);
-            if (inscription == null)
+            try
             {
-                return NotFound();
+                var inscription = await _context.Inscriptions.FindAsync(idInscription);
+                if (inscription == null)
+                    return NotFound(NOT_FOUND_INSCRIPTION);
+                if (validateActiveStudent(codeStudent, _context))
+                    return BadRequest(TEXT_ALERT_STUDENT);
+                inscription.CodStudent = codeStudent;
+                await _context.SaveChangesAsync();
+                return Ok(inscription);
             }
-            _inscription.ApplyTo(inscription, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-            await _context.SaveChangesAsync();
-            return Ok(inscription);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("updateDateInscription/{idInscription}")]
+        public async Task<IActionResult> updateDateInscription(int idInscription, DateTime date)
+        {
+            try
+            {
+                var inscription = await _context.Inscriptions.FindAsync(idInscription);
+                if (inscription == null)
+                    return NotFound();
+                inscription.DateRegistration = date;
+                await _context.SaveChangesAsync();
+                return Ok(inscription);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public static bool validateActiveStudent(int codStudent, dblab2Context dbContext)
+        {
+            return (dbContext.Students.Any(e => e.CodStudent == codStudent && e.StatusStudent == "I"));
+        }
+
+        public static bool validateActiveSubject(int codSubject, dblab2Context dbContext)
+        {
+            return (dbContext.Subjects.Any(e => e.CodSubject == codSubject && e.StatusSubject == "I"));
+        }
+
+        public static bool validateNotInscription(int codSubject, int codStudent, dblab2Context dbContext)
+        {
+            return (dbContext.Inscriptions.Any(e => e.CodSubject == codSubject && e.CodStudent == codStudent));
+        }
+
+        public static int incrementId(dblab2Context dbContext)
+        {
+            int count = dbContext.Inscriptions.Count();
+            return count;
         }
     }
 }

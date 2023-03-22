@@ -115,7 +115,5 @@ namespace DistriLab2.Controllers
             }
             return Ok(update);
         }
-
-
     }
 }
