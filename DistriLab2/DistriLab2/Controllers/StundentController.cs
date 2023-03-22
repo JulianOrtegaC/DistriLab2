@@ -44,11 +44,18 @@ namespace DistriLab2.Controllers
         [HttpPost]
         public async Task<ActionResult<Student>> CreateStudent(Student student)
         {
+            if (ExisteDocument(_context, student.NumDocument)) {
+                return BadRequest("El Numero de Documento  ya se encuentra registrado");
+            }
+            else
+            {
+
             student.CodStudent = GenerarCodigo(_context);
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetStudent), new { id = student.CodStudent }, student);
+            }
         }
 
         public static int GenerarCodigo(dblab2Context context)
@@ -79,7 +86,10 @@ namespace DistriLab2.Controllers
         {
             return dbContext.Students.Any(e => e.CodStudent == codigoGenerado);
         }
-
+        public static bool ExisteDocument(dblab2Context dbContext, string document)
+        {
+            return dbContext.Students.Any(e => e.NumDocument == document);
+        }
 
 
         [HttpPut]
