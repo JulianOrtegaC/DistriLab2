@@ -73,8 +73,8 @@ namespace DistriLab2.Controllers
         }
 
         [HttpPatch]
-        [Route("editSubjectName")]
-        public async Task<IActionResult> Put(Subject subject){
+        [Route("editSubject")]
+        public async Task<IActionResult> PatchSubject(Subject subject){
             var update = await _context.Subjects.FindAsync(subject.CodSubject);
 
             if (update == null)
