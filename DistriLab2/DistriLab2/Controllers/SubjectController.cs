@@ -28,7 +28,7 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubject/{CodSubject}")]
-        public ActionResult<Subject> GetSubject(string CodSubject){
+        public ActionResult<Subject> GetSubject(int CodSubject){
             try{
                 var client = _context.Subjects.FindAsync(CodSubject);
                 return Ok(client);
@@ -56,7 +56,7 @@ namespace DistriLab2.Controllers
 
         [HttpPut]
         [Route("updateSubject/{CodSubject}")]
-        public async Task<IActionResult> updateSubject(string CodSubject, string NameSubject){
+        public async Task<IActionResult> updateSubject(int CodSubject, string NameSubject){
             try {
                 var subject = await _context.Subjects.FindAsync(CodSubject);
                 if (subject == null)
@@ -95,7 +95,7 @@ namespace DistriLab2.Controllers
 
         [HttpPatch]
         [Route("editSubject/{CodSubject}")]
-        public async Task<ActionResult> Patch(string CodSubject, JsonPatchDocument<Subject> _subject){
+        public async Task<ActionResult> Patch(int CodSubject, JsonPatchDocument<Subject> _subject){
             var subject = await _context.Subjects.FindAsync(CodSubject);
             if (subject == null)
             {
