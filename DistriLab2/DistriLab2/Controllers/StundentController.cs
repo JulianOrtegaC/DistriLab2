@@ -24,7 +24,7 @@ namespace DistriLab2.Controllers
         [Route("getStudent")]
         public ActionResult<Student> GetPerson()
         {
-            var client = _context.Students.Take(20).ToList();
+            var client = _context.Students.Take(500).ToList();
             return Ok(client);
         }
 
