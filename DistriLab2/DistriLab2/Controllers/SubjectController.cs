@@ -42,6 +42,36 @@ namespace DistriLab2.Controllers
         }
 
         [HttpGet]
+        [Route("getSubjectFilterState")]
+        public ActionResult<List<Subject>> GetSubjectFilterState()
+        {
+            try
+            {
+                var client = _context.Subjects.OrderBy(sub => sub.StatusSubject).ToList();
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("getSubjectFilterCod")]
+        public ActionResult<List<Subject>> GetSubjectFilterCod()
+        {
+            try
+            {
+                var client = _context.Subjects.OrderBy(sub => sub.CodSubject).ToList();
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("getSubjectDecending")]
         public ActionResult<List<Subject>> GetSubjectDecending()
         {
