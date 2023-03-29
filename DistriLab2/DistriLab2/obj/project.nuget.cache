@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+2jWHMJni/6NtEB606sKbEiGk+VckvkmXBWioyppgCVzdIvjYPGzOD693xfTg6d7V61nt+2ko2jfxpZfy8cwkg==",
+  "dgSpecHash": "Bc2qnTuCjJQReDcQe1+MmQtuGLdlxx0gY8UtvysPeEtlcawylp46pKQaNnD5iiYKxe+OdWtXUnk5+0f7cew72w==",
   "success": true,
-  "projectFilePath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\UI\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+  "projectFilePath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",

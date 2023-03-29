@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DistriLab2.Controllers
 {
+    [ApiController]
+    [Route("inscripcion" +
+        "")]
     public class InscriptionController : Controller
     {
         private readonly dblab2Context _context;
@@ -42,20 +45,20 @@ namespace DistriLab2.Controllers
 
         [HttpPost]
         [Route("addInscription")]
-        public async Task<IActionResult> AddInscription(int codStudent, int codSubject, DateTime dateRegistration)
+        public async Task<IActionResult> AddInscription(InscriptionR inscription)
         {
-            if (validateActiveSubject(codSubject, _context))
+            if (validateActiveSubject(inscription.CodSubject, _context))
                 return BadRequest(TEXT_ALERT_SUBJECT);
-            if (validateActiveStudent(codStudent, _context))
+            if (validateActiveStudent(inscription.CodStudent, _context))
                 return BadRequest(TEXT_ALERT_STUDENT);
-            if (validateNotInscription(codSubject, codStudent,_context))
+            if (validateNotInscription(inscription.CodSubject, inscription.CodStudent, _context))
                 return BadRequest(TEXT_ALERT_READY_INSCRIPTION);
             Inscription inscriptionAux = new()
             {
                 IdInscription = incrementId(_context) + 1,
-                CodStudent = codStudent,
-                CodSubject = codSubject,
-                DateRegistration = dateRegistration
+                CodStudent = inscription.CodStudent,
+                CodSubject = inscription.CodSubject,
+                DateRegistration = DateTime.UtcNow
             };
             Inscription auxins = _context.Inscriptions.Add(inscriptionAux).Entity;
             await _context.SaveChangesAsync();
@@ -64,21 +67,21 @@ namespace DistriLab2.Controllers
 
         [HttpPut]
         [Route("editInscription")]
-        public async Task<IActionResult> Put(int idInscription, int codStudent, int codSubject, DateTime dateRegistration)
+        public async Task<IActionResult> Put(InscriptionR inscription)
         {
-            var update = await _context.Inscriptions.FindAsync(idInscription);
-            if (validateActiveSubject(codSubject, _context))
+            var update = await _context.Inscriptions.FindAsync(inscription.IdInscription);
+            if (validateActiveSubject(inscription.CodSubject, _context))
                 return BadRequest(TEXT_ALERT_SUBJECT);
-            if (validateActiveStudent(codStudent, _context))
+            if (validateActiveStudent(inscription.CodStudent, _context))
                 return BadRequest(TEXT_ALERT_STUDENT);
-            if (validateNotInscription(codSubject, codStudent, _context))
+            if (validateNotInscription(inscription.CodSubject, inscription.CodStudent, _context))
                 return BadRequest(TEXT_ALERT_READY_INSCRIPTION);
             if (update == null)
-                return NotFound(NOT_FOUND_INSCRIPTION);
-            update.IdInscription = idInscription;
-            update.CodStudent = codStudent;
-            update.CodSubject = codSubject;
-            update.DateRegistration = dateRegistration;
+                return NotFound(NOT_FOUND_INSCRIPTION + inscription.IdInscription);
+            update.IdInscription = inscription.IdInscription;
+            update.CodStudent = inscription.CodStudent;
+            update.CodSubject = inscription.CodSubject;
+            update.DateRegistration = DateTime.UtcNow;
 
             var aux = await _context.SaveChangesAsync() > 0;
             if (!aux)
