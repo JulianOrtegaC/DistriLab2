@@ -118,7 +118,7 @@ namespace DistriLab2.Controllers
             return Ok(update);
         }
 
-        /*[HttpPatch]
+        [HttpPatch]
         [Route("updateStudent/{codStudent}")]
         public async Task<IActionResult> updateInscriptionCodeStudent(int codStudent, JsonPatchDocument<Student> student)
         {
@@ -133,7 +133,7 @@ namespace DistriLab2.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(_studentAux);
-        }*/
+        }
 
         /*[HttpPatch]
         [Route("updateStudent/{codStudent}")]
