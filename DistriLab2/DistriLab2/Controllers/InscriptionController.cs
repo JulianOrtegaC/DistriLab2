@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DistriLab2.Controllers
 {
     [ApiController]
-    [Route("inscripcion" +
-        "")]
+    [Route("inscripcion")]
     public class InscriptionController : Controller
     {
         private readonly dblab2Context _context;
@@ -27,6 +26,21 @@ namespace DistriLab2.Controllers
         {
             var client = _context.Inscriptions.Take(20).ToList();
             return Ok(client);
+        }
+
+        [HttpGet]
+        [Route("getInscriptionsN")]
+        public ActionResult<object> GetInscriptionsWithName()
+        {
+
+            
+                var inscripciones = _context.Inscriptions
+                    .Include(i => i.CodStudentNavigation)
+                    .Include(i => i.CodSubjectNavigation)
+                    .ToList();
+
+                return inscripciones;
+            
         }
 
         [HttpGet]
@@ -122,25 +136,6 @@ namespace DistriLab2.Controllers
                 if (validateActiveStudent(codeStudent, _context))
                     return BadRequest(TEXT_ALERT_STUDENT);
                 inscription.CodStudent = codeStudent;
-                await _context.SaveChangesAsync();
-                return Ok(inscription);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPatch]
-        [Route("updateDateInscription/{idInscription}")]
-        public async Task<IActionResult> updateDateInscription(int idInscription, DateTime date)
-        {
-            try
-            {
-                var inscription = await _context.Inscriptions.FindAsync(idInscription);
-                if (inscription == null)
-                    return NotFound();
-                inscription.DateRegistration = date;
                 await _context.SaveChangesAsync();
                 return Ok(inscription);
             }
