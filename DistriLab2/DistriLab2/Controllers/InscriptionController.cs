@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace DistriLab2.Controllers
 {
@@ -25,6 +26,10 @@ namespace DistriLab2.Controllers
         public ActionResult<Inscription> GetInscriptions()
         {
             var client = _context.Inscriptions.Take(20).ToList();
+            foreach (var registro in client)
+            {
+                registro.DateRegistration = registro.DateRegistration.Date;
+            }
             return Ok(client);
         }
 
@@ -32,15 +37,22 @@ namespace DistriLab2.Controllers
         [Route("getInscriptionsN")]
         public ActionResult<object> GetInscriptionsWithName()
         {
+            using (var contexto = _context)
+            {
+                var inscripciones = contexto.Inscriptions
+                .Include(i => i.CodSubjectNavigation)
+                .Include(i => i.CodStudentNavigation).Take(20)
+                .ToList();
 
-            
-                var inscripciones = _context.Inscriptions
-                    .Include(i => i.CodStudentNavigation)
-                    .Include(i => i.CodSubjectNavigation)
-                    .ToList();
+                foreach (var inscripcion in inscripciones)
+                {
+                    inscripcion.CodSubjectNavigation = contexto.Subjects.SingleOrDefault(m => m.CodSubject == inscripcion.CodSubject);
+                    
+                    inscripcion.CodStudentNavigation = contexto.Students.SingleOrDefault(e => e.CodStudent == inscripcion.CodStudent);
+                }
 
                 return inscripciones;
-            
+            }
         }
 
         [HttpGet]
