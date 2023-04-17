@@ -28,6 +28,49 @@ namespace DistriLab2.Controllers
             return Ok(client);
         }
 
+        [HttpGet]
+        [Route("getStudenttNormal")]
+        public ActionResult<List<Student>> GetStudentNormal()
+        {
+            try
+            {
+                var client = _context.Students.OrderBy(sub => sub.FirstNameStudent).ToList();
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("getStudentFilterCod")]
+        public ActionResult<List<Student>> GetStudentFilterCod()
+        {
+            try
+            {
+                var client = _context.Students.OrderBy(sub => sub.CodStudent).ToList();
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        [Route("getStudentDecending")]
+        public ActionResult<List<Student>> GetStudentDecending()
+        {
+            try
+            {
+                var client = _context.Subjects.OrderByDescending(sub => sub.NameSubject).ToList();
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // GET: api/Student/5
         [HttpGet("{id}")]
@@ -46,17 +89,18 @@ namespace DistriLab2.Controllers
         [HttpPost]
         public async Task<ActionResult<Student>> CreateStudent(Student student)
         {
-            if (DocumentExists(_context, student.NumDocument)) {
+            if (DocumentExists(_context, student.NumDocument))
+            {
                 return BadRequest(TEXT_ALERT_NDOCUMENT_REGISTERED);
             }
             else
             {
 
-            student.CodStudent = GenerarCodigo(_context);
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+                student.CodStudent = GenerarCodigo(_context);
+                _context.Students.Add(student);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetStudent), new { id = student.CodStudent }, student);
+                return CreatedAtAction(nameof(GetStudent), new { id = student.CodStudent }, student);
             }
         }
 
@@ -102,7 +146,7 @@ namespace DistriLab2.Controllers
 
             if (update == null)
                 return BadRequest();
-          
+
             update.FirstNameStudent = student.FirstNameStudent;
             update.LastNameStudent = student.LastNameStudent;
             update.TypeDocument = student.TypeDocument;
@@ -172,7 +216,7 @@ namespace DistriLab2.Controllers
         }*/
         [HttpPatch]
         [Route("updateNameStudent/{CodStudent}")]
-        public async Task<IActionResult> updateNameStudent(int CodStudent,string FirstNameStudent)
+        public async Task<IActionResult> updateNameStudent(int CodStudent, string FirstNameStudent)
         {
             try
             {
