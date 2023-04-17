@@ -1,6 +1,8 @@
-﻿using DistriLab2.Models.DB;
+﻿using DistriLab2.Models;
+using DistriLab2.Models.DB;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DistriLab2.Controllers
 {
@@ -9,17 +11,24 @@ namespace DistriLab2.Controllers
     public class SubjectController : Controller
     {
 
-		private readonly dblab2Context _context;
+		private readonly dblab2Context dbSubjects;
+        private int NUM_PAG = 10;
 
         public SubjectController(dblab2Context context){
-            _context = context;
+            dbSubjects = context;
         }
 
         [HttpGet]
         [Route("getSubject")]
-        public ActionResult<List<Subject>> GetSubject(){
+        public ActionResult<List<Subject>> GetSubjectsPags(int pagina){
             try {
-                var client = _context.Subjects.ToList();
+                var countSubjects = dbSubjects.Subjects.Count();
+                int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
+                int indiceInicio = (pagina - 1) * NUM_PAG;
+                var client = dbSubjects.Subjects.OrderBy(x => x.CodSubject)
+                                         .Skip(indiceInicio)
+                                         .Take(NUM_PAG)
+                                         .ToList();
                 return Ok(client);
             }catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -28,11 +37,17 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectNormal")]
-        public ActionResult<List<Subject>> GetSubjectNormal()
+        public ActionResult<List<Subject>> GetSubjectNormal(int pagina)
         {
             try
             {
-                var client = _context.Subjects.OrderBy(sub=> sub.NameSubject).ToList();
+                var countSubjects = dbSubjects.Subjects.Count();
+                int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
+                int indiceInicio = (pagina - 1) * NUM_PAG;
+                var client = dbSubjects.Subjects.OrderBy(x => x.NameSubject)
+                                         .Skip(indiceInicio)
+                                         .Take(NUM_PAG)
+                                         .ToList();
                 return Ok(client);
             }
             catch (Exception ex)
@@ -43,11 +58,17 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectFilterState")]
-        public ActionResult<List<Subject>> GetSubjectFilterState()
+        public ActionResult<List<Subject>> GetSubjectFilterState(int pagina)
         {
             try
             {
-                var client = _context.Subjects.OrderBy(sub => sub.StatusSubject).ToList();
+                var countSubjects = dbSubjects.Subjects.Count();
+                int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
+                int indiceInicio = (pagina - 1) * NUM_PAG;
+                var client = dbSubjects.Subjects.OrderBy(x => x.StatusSubject)
+                                         .Skip(indiceInicio)
+                                         .Take(NUM_PAG)
+                                         .ToList();
                 return Ok(client);
             }
             catch (Exception ex)
@@ -58,11 +79,17 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectFilterCod")]
-        public ActionResult<List<Subject>> GetSubjectFilterCod()
+        public ActionResult<List<Subject>> GetSubjectFilterCod(int pagina)
         {
             try
             {
-                var client = _context.Subjects.OrderBy(sub => sub.CodSubject).ToList();
+                var countSubjects = dbSubjects.Subjects.Count();
+                int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
+                int indiceInicio = (pagina - 1) * NUM_PAG;
+                var client = dbSubjects.Subjects.OrderBy(x => x.CodSubject)
+                                         .Skip(indiceInicio)
+                                         .Take(NUM_PAG)
+                                         .ToList();
                 return Ok(client);
             }
             catch (Exception ex)
@@ -73,11 +100,17 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectDecending")]
-        public ActionResult<List<Subject>> GetSubjectDecending()
+        public ActionResult<List<Subject>> GetSubjectDecending(int pagina)
         {
             try
             {
-                var client = _context.Subjects.OrderByDescending(sub => sub.NameSubject).ToList();
+                var countSubjects = dbSubjects.Subjects.Count();
+                int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
+                int indiceInicio = (pagina - 1) * NUM_PAG;
+                var client = dbSubjects.Subjects.OrderByDescending(x => x.NameSubject)
+                                         .Skip(indiceInicio)
+                                         .Take(NUM_PAG)
+                                         .ToList();
                 return Ok(client);
             }
             catch (Exception ex)
@@ -88,10 +121,10 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubject/{CodSubject}")]
-        public ActionResult<Subject> GetSubject(int CodSubject){
+        public ActionResult<Subject> GetSubjectByCod(int CodSubject){
             try
             {
-                var client = _context.Subjects.FindAsync(CodSubject);
+                var client = dbSubjects.Subjects.FindAsync(CodSubject);
                 return Ok(client);
             }
             catch (Exception ex)
@@ -103,15 +136,15 @@ namespace DistriLab2.Controllers
 
         [HttpPost]
         [Route("addSubject")]
-        public async Task<IActionResult> AddSubject(Subject subject){
+        public async Task<IActionResult> AddSubject(RequestSubject subject){
             Subject subAux = new(){
-                CodSubject = subject.CodSubject,
+                CodSubject = 0,
                 NameSubject = subject.NameSubject,
                 Quotas = subject.Quotas,
                 StatusSubject = subject.StatusSubject
             };
-            Subject auxsub = _context.Subjects.Add(subAux).Entity;
-            await _context.SaveChangesAsync();
+            Subject auxsub = dbSubjects.Subjects.Add(subAux).Entity;
+            await dbSubjects.SaveChangesAsync();
             return Created($"/Subject/{subAux.CodSubject}", subAux);
         }
 
@@ -119,13 +152,13 @@ namespace DistriLab2.Controllers
         [Route("updateSubject/{CodSubject}")]
         public async Task<IActionResult> updateSubject(int CodSubject, string NameSubject){
             try {
-                var subject = await _context.Subjects.FindAsync(CodSubject);
+                var subject = await dbSubjects.Subjects.FindAsync(CodSubject);
                 if (subject == null)
                 {
                     return NotFound();
                 }
                 subject.NameSubject = NameSubject;
-                await _context.SaveChangesAsync();
+                await dbSubjects.SaveChangesAsync();
                 return Ok(subject);
             }catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -139,13 +172,13 @@ namespace DistriLab2.Controllers
         {
             try
             {
-                var subject = await _context.Subjects.FindAsync(CodSubject);
+                var subject = await dbSubjects.Subjects.FindAsync(CodSubject);
                 if (subject == null)
                 {
                     return NotFound();
                 }
                 subject.StatusSubject = StatusSubject;
-                await _context.SaveChangesAsync();
+                await dbSubjects.SaveChangesAsync();
                 return Ok(subject);
             }
             catch (Exception ex)
@@ -158,7 +191,7 @@ namespace DistriLab2.Controllers
         [HttpPut]
         [Route("editSubject")]
         public async Task<IActionResult> PatchSubject(Subject subject){
-            var update = await _context.Subjects.FindAsync(subject.CodSubject);
+            var update = await dbSubjects.Subjects.FindAsync(subject.CodSubject);
 
             if (update == null)
                 return BadRequest();
@@ -168,7 +201,7 @@ namespace DistriLab2.Controllers
             update.Quotas = subject.Quotas;
             update.StatusSubject = subject.StatusSubject;
 
-            var aux = await _context.SaveChangesAsync() > 0;
+            var aux = await dbSubjects.SaveChangesAsync() > 0;
             if (!aux)
             {
                 return NoContent();
@@ -179,13 +212,13 @@ namespace DistriLab2.Controllers
         [HttpPatch]
         [Route("editSubject/{CodSubject}")]
         public async Task<ActionResult> Patch(int CodSubject, JsonPatchDocument<Subject> _subject){
-            var subject = await _context.Subjects.FindAsync(CodSubject);
+            var subject = await dbSubjects.Subjects.FindAsync(CodSubject);
             if (subject == null)
             {
                 return NotFound();
             }
             _subject.ApplyTo(subject, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-            await _context.SaveChangesAsync();
+            await dbSubjects.SaveChangesAsync();
             return Ok(subject);
         }
 
