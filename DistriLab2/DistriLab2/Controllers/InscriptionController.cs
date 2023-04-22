@@ -35,10 +35,12 @@ namespace DistriLab2.Controllers
                              select new
                              {
                                  idInscription = c1.IdInscription,
-                                 nameStudent = c2.FirstNameStudent,
-                                 lastNameStudent = c2.LastNameStudent,
-                                 nameSubjects = c3.NameSubject
-                             }).Take(200).ToList();
+                                 codStudent = c1.CodStudent,
+                                 nameStudent = c2.FirstNameStudent + " " + c2.LastNameStudent,
+                                 codSubject = c1.CodSubject,
+                                 nameSubject = c3.NameSubject,
+                                 dateRegistration = c1.DateRegistration.ToString("dd/MM/yyyy")
+        }).Take(200).ToList();
             return Ok(resultado);
         }
 
