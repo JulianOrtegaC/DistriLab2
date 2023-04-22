@@ -17,6 +17,7 @@ namespace DistriLab2.Models.DB
         public string NumDocument { get; set; } = null!;
         public string StatusStudent { get; set; } = null!;
         public string GenderStudent { get; set; } = null!;
+        public string? PathStudent { get; set; }
 
         public virtual ICollection<Inscription> Inscriptions { get; set; }
     }

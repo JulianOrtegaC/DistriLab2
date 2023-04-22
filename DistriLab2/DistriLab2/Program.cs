@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using DistriLab2.Models.DB;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,10 @@ builder.Services.AddCors(options => options.AddPolicy("AllowAngularOrigins",
                                                     .AllowAnyHeader()
                                                     .AllowAnyMethod()));
 
+builder.Services.AddScoped(_ => {
+    return new BlobServiceClient(builder.Configuration.GetConnectionString("AzureBlobStorage"));
 
+});
 
 
 builder.Configuration.AddJsonFile("appsettings.json");

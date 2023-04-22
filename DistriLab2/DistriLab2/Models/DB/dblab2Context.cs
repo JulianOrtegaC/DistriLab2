@@ -95,6 +95,10 @@ namespace DistriLab2.Models.DB
                 entity.Property(e => e.TypeDocument)
                     .HasMaxLength(50)
                     .HasColumnName("type_document");
+
+                entity.Property(e => e.PathStudent)
+                    .HasMaxLength(150)
+                    .HasColumnName("path_student");
             });
 
             modelBuilder.Entity<Subject>(entity =>
