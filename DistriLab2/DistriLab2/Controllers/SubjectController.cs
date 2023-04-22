@@ -137,8 +137,9 @@ namespace DistriLab2.Controllers
         [HttpPost]
         [Route("addSubject")]
         public async Task<IActionResult> AddSubject(RequestSubject subject){
+            var cod = dbSubjects.Subjects.Count() + 1;
             Subject subAux = new(){
-                CodSubject = 0,
+                CodSubject = cod,
                 NameSubject = subject.NameSubject,
                 Quotas = subject.Quotas,
                 StatusSubject = subject.StatusSubject

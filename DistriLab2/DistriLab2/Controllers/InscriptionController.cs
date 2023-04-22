@@ -1,7 +1,9 @@
-﻿using DistriLab2.Models.DB;
+﻿using DistriLab2.Models;
+using DistriLab2.Models.DB;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Security.Cryptography;
 
 namespace DistriLab2.Controllers
@@ -15,6 +17,7 @@ namespace DistriLab2.Controllers
         private string TEXT_ALERT_SUBJECT = "LA MATERIA NO SE ENCUENTRA ACTIVA";
         private string TEXT_ALERT_READY_INSCRIPTION = "LA MATERIA YA SE ENCUENTRA INSCRITA";
         private string NOT_FOUND_INSCRIPTION = "LA INSCRIPCIÓN NO EXISTE";
+        private object idInscription;
 
         public InscriptionController(dblab2Context context)
         {
@@ -23,14 +26,20 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getInscriptions")]
-        public ActionResult<Inscription> GetInscriptions()
+        public ActionResult<ResponseInscriptionJoin> GetInscriptions()
         {
-            var client = _context.Inscriptions.Take(20).ToList();
-            foreach (var registro in client)
-            {
-                registro.DateRegistration = registro.DateRegistration.Date;
-            }
-            return Ok(client);
+
+            var resultado = (from c1 in _context.Inscriptions
+                             join c2 in _context.Students on c1.CodStudent equals c2.CodStudent
+                             join c3 in _context.Subjects on c1.CodSubject equals c3.CodSubject
+                             select new
+                             {
+                                 idInscription = c1.IdInscription,
+                                 nameStudent = c2.FirstNameStudent,
+                                 lastNameStudent = c2.LastNameStudent,
+                                 nameSubjects = c3.NameSubject
+                             }).Take(200).ToList();
+            return Ok(resultado);
         }
 
         [HttpGet]
