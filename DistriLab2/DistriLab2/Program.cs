@@ -12,7 +12,7 @@ builder.Services.AddDbContext<dblab2Context>(options => {
 });
 builder.Services.AddCors(options => options.AddPolicy("AllowAngularOrigins",
                                     builder => builder.AllowAnyOrigin()
-                                                    .WithOrigins("http://localhost:4200")
+                                                    .WithOrigins("https://black-bay-05044b510.3.azurestaticapps.net")
                                                     .AllowAnyHeader()
                                                     .AllowAnyMethod()));
 
