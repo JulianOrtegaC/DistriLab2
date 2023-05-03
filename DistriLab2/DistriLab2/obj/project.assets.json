@@ -109,6 +109,25 @@
       "MessagePackAnalyzer/2.1.152": {
         "type": "package"
       },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0-preview.1.21103.6": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.7.1"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.JsonPatch/7.0.0": {
         "type": "package",
         "dependencies": {
@@ -3857,6 +3876,21 @@
         "messagepackanalyzer.nuspec",
         "tools/install.ps1",
         "tools/uninstall.ps1"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0-preview.1.21103.6": {
+      "sha512": "TKFGt8GYmH2It2iaOChhlbmyX3MGAPByLI4zFLv77Q1+NMeUMYZbxTaCXrnWt+veWX2yT0LWVZH38Jx+Ppp5PA==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.0-preview.1.21103.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
+        "microsoft.aspnetcore.authentication.jwtbearer.6.0.0-preview.1.21103.6.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
     "Microsoft.AspNetCore.JsonPatch/7.0.0": {
@@ -10509,6 +10543,7 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "Azure.Storage.Blobs >= 12.16.0",
+      "Microsoft.AspNetCore.Authentication.JwtBearer >= 6.0.0-preview.1.21103.6",
       "Microsoft.AspNetCore.JsonPatch >= 7.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.15",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.15",
@@ -10558,6 +10593,10 @@
           "Azure.Storage.Blobs": {
             "target": "Package",
             "version": "[12.16.0, )"
+          },
+          "Microsoft.AspNetCore.Authentication.JwtBearer": {
+            "target": "Package",
+            "version": "[6.0.0-preview.1.21103.6, )"
           },
           "Microsoft.AspNetCore.JsonPatch": {
             "target": "Package",

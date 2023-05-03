@@ -895,3 +895,4 @@ D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\backend\DistriLab2\DistriLab2\obj\Debu
 D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\backend\DistriLab2\DistriLab2\obj\Debug\net6.0\DistriLab2.pdb
 D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\backend\DistriLab2\DistriLab2\obj\Debug\net6.0\DistriLab2.genruntimeconfig.cache
 D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\backend\DistriLab2\DistriLab2\obj\Debug\net6.0\ref\DistriLab2.dll
+D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\backend\DistriLab2\DistriLab2\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

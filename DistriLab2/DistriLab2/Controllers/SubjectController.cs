@@ -1,5 +1,6 @@
 ﻿using DistriLab2.Models;
 using DistriLab2.Models.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -18,6 +19,7 @@ namespace DistriLab2.Controllers
             dbSubjects = context;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getSubject")]
         public ActionResult<List<Subject>> GetSubjectsPags(int pagina){

@@ -9,6 +9,6 @@ namespace DistriLab2.Models.DB
         public string HashUser { get; set; } = null!;
         public string EmailUser { get; set; } = null!;
 
-        public virtual User EmailUserNavigation { get; set; } = null!;
+        public virtual User? EmailUserNavigation { get; set; } = null;
     }
 }

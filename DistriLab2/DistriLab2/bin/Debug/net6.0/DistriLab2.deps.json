@@ -9,6 +9,7 @@
       "DistriLab2/1.0.0": {
         "dependencies": {
           "Azure.Storage.Blobs": "12.16.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.0-preview.1.21103.6",
           "Microsoft.AspNetCore.JsonPatch": "7.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.15",
           "Microsoft.EntityFrameworkCore.Tools": "6.0.15",
@@ -94,6 +95,17 @@
         }
       },
       "MessagePackAnalyzer/2.1.152": {},
+      "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0-preview.1.21103.6": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.8.0"
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.10306"
+          }
+        }
+      },
       "Microsoft.AspNetCore.JsonPatch/7.0.0": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -2435,6 +2447,13 @@
       "sha512": "sha512-uJhZlGMkXDaFYsH8V9S6o1EyvsUqB9mpU4DVBXNr0DXZVzZMhuLP1IkLj5xK3EKlaAcvkFkZv3eSvuz360wb3Q==",
       "path": "messagepackanalyzer/2.1.152",
       "hashPath": "messagepackanalyzer.2.1.152.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0-preview.1.21103.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TKFGt8GYmH2It2iaOChhlbmyX3MGAPByLI4zFLv77Q1+NMeUMYZbxTaCXrnWt+veWX2yT0LWVZH38Jx+Ppp5PA==",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.0-preview.1.21103.6",
+      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.0-preview.1.21103.6.nupkg.sha512"
     },
     "Microsoft.AspNetCore.JsonPatch/7.0.0": {
       "type": "package",

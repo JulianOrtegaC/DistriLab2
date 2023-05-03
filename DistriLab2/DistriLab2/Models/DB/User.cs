@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DistriLab2.Models.DB
 {
@@ -13,7 +14,7 @@ namespace DistriLab2.Models.DB
         public string NameUser { get; set; } = null!;
         public string EmailUser { get; set; } = null!;
         public string StatusUser { get; set; } = null!;
-
+        [JsonIgnore]
         public virtual ICollection<Credential> Credentials { get; set; }
     }
 }
