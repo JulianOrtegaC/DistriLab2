@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
   },
   "projects": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "projectName": "DistriLab2",
-        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Labs Distribuidos\\LAB2\\DistriLab2\\DistriLab2\\obj\\",
+        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.16.0, )"
+            },
             "Microsoft.AspNetCore.JsonPatch": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -82,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

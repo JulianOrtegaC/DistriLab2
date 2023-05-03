@@ -16,21 +16,49 @@ namespace DistriLab2.Models.DB
         {
         }
 
+        public virtual DbSet<Credential> Credentials { get; set; } = null!;
         public virtual DbSet<Inscription> Inscriptions { get; set; } = null!;
         public virtual DbSet<Student> Students { get; set; } = null!;
         public virtual DbSet<Subject> Subjects { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-ACIDEH6\\SQLEXPRESS01; Database=dblab2; Trusted_Connection=true; Integrated Security=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("server=tcp:uniserver1.database.windows.net;database=university;uid=Miguelz;pwd=Admin123");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseCollation("Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<Credential>(entity =>
+            {
+                entity.HasKey(e => e.CodCredential)
+                    .HasName("credential_pk_codcreden");
+
+                entity.Property(e => e.CodCredential)
+                    .HasMaxLength(50)
+                    .HasColumnName("cod_credential");
+
+                entity.Property(e => e.EmailUser)
+                    .HasMaxLength(50)
+                    .HasColumnName("email_user");
+
+                entity.Property(e => e.HashUser)
+                    .HasMaxLength(900)
+                    .HasColumnName("hash_user");
+
+                entity.HasOne(d => d.EmailUserNavigation)
+                    .WithMany(p => p.Credentials)
+                    .HasForeignKey(d => d.EmailUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("credential_fk_emailuser");
+            });
+
             modelBuilder.Entity<Inscription>(entity =>
             {
                 entity.HasKey(e => e.IdInscription)
@@ -87,6 +115,11 @@ namespace DistriLab2.Models.DB
                     .HasMaxLength(50)
                     .HasColumnName("num_document");
 
+                entity.Property(e => e.PathStudent)
+                    .HasMaxLength(600)
+                    .IsUnicode(false)
+                    .HasColumnName("path_student");
+
                 entity.Property(e => e.StatusStudent)
                     .HasMaxLength(1)
                     .HasColumnName("status_student")
@@ -95,10 +128,6 @@ namespace DistriLab2.Models.DB
                 entity.Property(e => e.TypeDocument)
                     .HasMaxLength(50)
                     .HasColumnName("type_document");
-
-                entity.Property(e => e.PathStudent)
-                    .HasMaxLength(600)
-                    .HasColumnName("path_student");
             });
 
             modelBuilder.Entity<Subject>(entity =>
@@ -119,6 +148,25 @@ namespace DistriLab2.Models.DB
                 entity.Property(e => e.StatusSubject)
                     .HasMaxLength(1)
                     .HasColumnName("status_subject")
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.EmailUser)
+                    .HasName("user_pk_emailuser");
+
+                entity.Property(e => e.EmailUser)
+                    .HasMaxLength(50)
+                    .HasColumnName("email_user");
+
+                entity.Property(e => e.NameUser)
+                    .HasMaxLength(50)
+                    .HasColumnName("name_user");
+
+                entity.Property(e => e.StatusUser)
+                    .HasMaxLength(1)
+                    .HasColumnName("status_user")
                     .IsFixedLength();
             });
 

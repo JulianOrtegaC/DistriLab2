@@ -10,7 +10,6 @@ namespace DistriLab2.Models.DB
             Credentials = new HashSet<Credential>();
         }
 
-        public string CodUser { get; set; } = null!;
         public string NameUser { get; set; } = null!;
         public string EmailUser { get; set; } = null!;
         public string StatusUser { get; set; } = null!;
