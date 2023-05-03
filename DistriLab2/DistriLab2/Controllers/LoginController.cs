@@ -24,7 +24,6 @@ namespace DistriLab2.Controllers
                 _confi = confi;
             }
 
-
             [HttpPost]
             public IActionResult Login([FromQuery] string emailUser, [FromQuery] string hash)
             {

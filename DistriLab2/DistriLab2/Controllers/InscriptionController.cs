@@ -1,5 +1,6 @@
 ﻿using DistriLab2.Models;
 using DistriLab2.Models.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Security.Cryptography;
 
 namespace DistriLab2.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("inscripcion")]
     public class InscriptionController : Controller

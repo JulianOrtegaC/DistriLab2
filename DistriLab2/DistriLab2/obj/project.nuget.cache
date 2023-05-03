@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DIGmvDVIqhOnzSRlNRn5S2MR0B4a9WcbvOHKgs9L+zuPHIgnfRBucMLuS0d6fVzPnJcwAb5hNnVRMCnDWyOemA==",
+  "dgSpecHash": "9CIjXwr2FCCIgBEPOEmLYzOX4A8C4kkliLFAPYjQgANn9RvvtmWCK9A7QFi2OSfKFcFrjUIgxnafIuWH4w/Y3g==",
   "success": true,
-  "projectFilePath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+  "projectFilePath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\azure.core\\1.31.0\\azure.core.1.31.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\azure.storage.blobs\\12.16.0\\azure.storage.blobs.12.16.0.nupkg.sha512",

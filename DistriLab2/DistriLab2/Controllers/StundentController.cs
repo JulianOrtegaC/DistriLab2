@@ -4,9 +4,11 @@ using DistriLab2.Models.DB;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DistriLab2.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class StudentController : ControllerBase

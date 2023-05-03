@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
   },
   "projects": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
+    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "projectName": "DistriLab2",
-        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\backend\\DistriLab2\\DistriLab2\\obj\\",
+        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",

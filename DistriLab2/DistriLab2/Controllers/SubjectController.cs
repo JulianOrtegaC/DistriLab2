@@ -7,6 +7,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DistriLab2.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("subject")]
     public class SubjectController : Controller
@@ -19,7 +20,6 @@ namespace DistriLab2.Controllers
             dbSubjects = context;
         }
 
-        [Authorize]
         [HttpGet]
         [Route("getSubject")]
         public ActionResult<List<Subject>> GetSubjectsPags(int pagina){
