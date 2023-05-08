@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using DistriLab2.Models.DB;
+using DistriLab2.utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
@@ -11,13 +12,13 @@ using System.Text;
 
 namespace DistriLab2.Controllers
 {
-        [ApiController]
-        [Route("[controller]")]
-        public class LoginController : ControllerBase
-        {
+    [ApiController]
+    [Route("[controller]")]
+    public class LoginController : ControllerBase
+    {
 
-            private readonly dblab2Context _context;
-            private readonly IConfiguration _confi;
+        private readonly dblab2Context _context;
+        private readonly IConfiguration _confi;
 
             public LoginController(dblab2Context context, IConfiguration confi)
             {
@@ -26,24 +27,31 @@ namespace DistriLab2.Controllers
             }
 
             [HttpPost]
-            public IActionResult Login([FromQuery] string emailUser, [FromQuery] string hash)
+            public IActionResult Login([FromQuery] string emailUser, [FromQuery] string password)
             {
-                string auxPassword = ToSHA256(hash);
-                Credential user = _context.Credentials.Where(c => c.EmailUser == emailUser && c.HashUser == auxPassword).FirstOrDefault();
-                User user1 = _context.Users.Where(c => c.EmailUser == emailUser).FirstOrDefault();
-                if (user != null)
+                string auxPassword = ToSHA256(password);
+                var resultado = (from c1 in _context.Credentials
+                             join c2 in _context.Users on c1.EmailUser equals c2.EmailUser
+                             select new
+                             {
+                                 EmailUser = c1.EmailUser,
+                                 StatusCode = c2.StatusUser,
+                                 HashUser = c1.HashUser
+                             }
+                             ).Where(c => c.EmailUser == emailUser && c.HashUser == auxPassword).FirstOrDefault();
+                if (resultado != null)
                 {
-                    if (user1.StatusUser == "A")
+                    if (resultado.StatusCode == "A")
                     {
-                        User perAux = _context.Users.Where(p => p.EmailUser == user.EmailUser).FirstOrDefault();
                         DateTime expirationDate = DateTime.UtcNow.AddMinutes(30);
-                        string token = generateToken(emailUser, expirationDate);
-                        return Ok(new { token = token, user = perAux });
+                        string token = Tokens.generateToken(_confi, emailUser, expirationDate);
+                        
+                        return Ok(new { token = token, user = emailUser });
                     }
                     else
                     {
-                    return BadRequest(new { message = "El usuario está inactivo" });
-                }
+                        return BadRequest(new { message = "El usuario está inactivo" });
+                    }
                 }
                 else
                 {
@@ -64,60 +72,38 @@ namespace DistriLab2.Controllers
                 return sb.ToString();
             }
 
-        [Route("Register")]
-        [HttpPost]
-        public async Task<IActionResult> Register(string email, string password)
-        {
-            if (!ModelState.IsValid)
+            [Route("Register")]
+            [HttpPost]
+            public async Task<IActionResult> Register(RequestNewUser newuser)
             {
-                return BadRequest();
-            }
-            User crede = _context.Users.Where(p => p.EmailUser == email).FirstOrDefault();
-            Console.WriteLine(crede.ToString);
-            if (crede != null)
-            {
-                string passaux = ToSHA256(password);
-                Credential cred = new Credential()
+                if (!ModelState.IsValid)
                 {
-                    CodCredential = (incrementId(_context) + 1) + "A",
-                    EmailUser = email,
-                    HashUser = passaux
-                };
-                _context.Credentials.Add(cred);
-                await _context.SaveChangesAsync();
-
-                return Created($"/User/{cred.EmailUser}", cred);
-            }
-            return BadRequest(new { message = "La direción de correo eletronico no existe"});
-        }
-
-
-            [HttpGet]
-            [Route("Tokenn")]
-            public string generateToken(string username, DateTime expirationDate)
-            {
-#pragma warning disable CS8604 // Posible argumento de referencia nulo
-                var keyByte = Encoding.ASCII.GetBytes(_confi.GetSection("settings").GetSection("secretKey").ToString());
-#pragma warning restore CS8604 // Posible argumento de referencia nulo
-                var claims = new ClaimsIdentity();
-                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, username));
-                var tokenDescriptor = new SecurityTokenDescriptor
+                    return BadRequest();
+                }
+                User auxNewUser = new User
                 {
-                    Subject = claims,
-                    Expires = expirationDate,
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyByte), SecurityAlgorithms.HmacSha256Signature)
+                    NameUser=newuser.EmailUser,
+                    EmailUser=newuser.EmailUser,
+                    StatusUser=newuser.StatusUser
                 };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
-                string token = tokenHandler.WriteToken(tokenConfig);
-                return token;
-            }
+                _context.Users.Add(auxNewUser);
+                User crede = _context.Users.Where(p => p.EmailUser == newuser.EmailUser).FirstOrDefault();
+         
+                if (crede != null)
+                {
+                    string passaux = ToSHA256(newuser.PasswordUser);
+                    Credential cred = new Credential()
+                    {
+                        CodCredential = (Tokens.incrementId(_context) + 1) + "A",
+                        EmailUser = newuser.EmailUser,
+                        HashUser = passaux
+                    };
+                    _context.Credentials.Add(cred);
+                    await _context.SaveChangesAsync();
 
-            [HttpGet]
-            public static int incrementId(dblab2Context dbContext)
-            {
-                int count = dbContext.Credentials.Count();
-                return count;
+                    return Created($"/User/{cred.EmailUser}", cred);
+                }
+                return BadRequest(new { message = "La direción de correo eletronico no existe"});
             }
     }
 }

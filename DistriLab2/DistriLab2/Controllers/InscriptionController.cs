@@ -42,7 +42,7 @@ namespace DistriLab2.Controllers
                                  codSubject = c1.CodSubject,
                                  nameSubject = c3.NameSubject,
                                  dateRegistration = c1.DateRegistration.ToString("dd/MM/yyyy")
-        }).Take(200).ToList();
+                              }).Take(200).ToList();
             return Ok(resultado);
         }
 
