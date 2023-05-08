@@ -66,20 +66,20 @@ namespace DistriLab2.Controllers
 
         [Route("Register")]
         [HttpPost]
-        public async Task<IActionResult> Register(Credential credential)
+        public async Task<IActionResult> Register(string email, string password)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            Credential crede = _context.Credentials.Where(p => p.EmailUser == credential.EmailUser).FirstOrDefault();
+            Credential crede = _context.Credentials.Where(p => p.EmailUser == email).FirstOrDefault();
             if (crede != null)
             {
-                string passaux = ToSHA256(credential.HashUser);
+                string passaux = ToSHA256(password);
                 Credential cred = new Credential()
                 {
                     CodCredential = (incrementId(_context) + 1) + "A",
-                    EmailUser = credential.EmailUser,
+                    EmailUser = email,
                     HashUser = passaux
                 };
                 _context.Credentials.Add(cred);
