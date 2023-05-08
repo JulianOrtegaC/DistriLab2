@@ -72,7 +72,8 @@ namespace DistriLab2.Controllers
             {
                 return BadRequest();
             }
-            Credential crede = _context.Credentials.Where(p => p.EmailUser == email).FirstOrDefault();
+            User crede = _context.Users.Where(p => p.EmailUser == email).FirstOrDefault();
+            Console.WriteLine(crede.ToString);
             if (crede != null)
             {
                 string passaux = ToSHA256(password);
