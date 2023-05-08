@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<dblab2Context>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Conexion"));
 });
