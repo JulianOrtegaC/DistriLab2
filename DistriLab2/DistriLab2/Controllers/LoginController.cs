@@ -74,7 +74,7 @@ namespace DistriLab2.Controllers
 
             [Route("Register")]
             [HttpPost]
-            public async Task<IActionResult> Register(RequestNewUser newuser)
+            public async Task<IActionResult> Register(string nameuser, string email, string password)
             {
                 if (!ModelState.IsValid)
                 {
@@ -82,20 +82,20 @@ namespace DistriLab2.Controllers
                 }
                 User auxNewUser = new User
                 {
-                    NameUser=newuser.EmailUser,
-                    EmailUser=newuser.EmailUser,
-                    StatusUser=newuser.StatusUser
+                    NameUser=nameuser,
+                    EmailUser=email,
+                    StatusUser="A"
                 };
                 _context.Users.Add(auxNewUser);
-                User crede = _context.Users.Where(p => p.EmailUser == newuser.EmailUser).FirstOrDefault();
+                User crede = _context.Users.Where(p => p.EmailUser == email).FirstOrDefault();
          
-                if (crede != null)
+                if (crede == null)
                 {
-                    string passaux = ToSHA256(newuser.PasswordUser);
+                    string passaux = ToSHA256(password);
                     Credential cred = new Credential()
                     {
                         CodCredential = (Tokens.incrementId(_context) + 1) + "A",
-                        EmailUser = newuser.EmailUser,
+                        EmailUser = email,
                         HashUser = passaux
                     };
                     _context.Credentials.Add(cred);
@@ -103,7 +103,7 @@ namespace DistriLab2.Controllers
 
                     return Created($"/User/{cred.EmailUser}", cred);
                 }
-                return BadRequest(new { message = "La direción de correo eletronico no existe"});
+                return BadRequest(new { message = "El usuario ya existe"});
             }
     }
 }
