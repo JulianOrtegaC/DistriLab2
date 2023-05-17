@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
+    "D:\\UPTC\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {}
   },
   "projects": {
-    "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
+    "D:\\UPTC\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectUniqueName": "D:\\UPTC\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "projectName": "DistriLab2",
-        "projectPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
+        "projectPath": "D:\\UPTC\\Backend\\DistriLab2\\DistriLab2\\DistriLab2.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "D:\\UPTC\\Vl SEMESTRE\\SISTEMAS DISTRIBUIDOS\\Backend\\DistriLab2\\DistriLab2\\obj\\",
+        "outputPath": "D:\\UPTC\\Backend\\DistriLab2\\DistriLab2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -61,6 +61,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.15, )"
+            },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[8.0.0-preview.4.23260.4, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",

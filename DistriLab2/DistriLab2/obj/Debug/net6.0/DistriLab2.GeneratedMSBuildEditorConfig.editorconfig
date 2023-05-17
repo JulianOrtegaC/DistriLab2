@@ -9,33 +9,33 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = DistriLab2
 build_property.RootNamespace = DistriLab2
-build_property.ProjectDir = D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\Backend\DistriLab2\DistriLab2\
+build_property.ProjectDir = D:\UPTC\Backend\DistriLab2\DistriLab2\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\UPTC\Vl SEMESTRE\SISTEMAS DISTRIBUIDOS\Backend\DistriLab2\DistriLab2
+build_property.MSBuildProjectDirectory = D:\UPTC\Backend\DistriLab2\DistriLab2
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Students/Create.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Students/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Students/Delete.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Students/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Students/Details.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Students/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Students/Edit.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Students/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/UPTC/Vl SEMESTRE/SISTEMAS DISTRIBUIDOS/Backend/DistriLab2/DistriLab2/Views/Students/Index.cshtml]
+[D:/UPTC/Backend/DistriLab2/DistriLab2/Views/Students/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
