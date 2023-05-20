@@ -57,6 +57,11 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("AzureRedisConnection");
+});
+
 var secretKey = builder.Configuration.GetSection("settings").GetSection("secretKey").ToString();
 var keyByte = Encoding.UTF8.GetBytes(secretKey);
 builder.Services.AddAuthentication(config =>

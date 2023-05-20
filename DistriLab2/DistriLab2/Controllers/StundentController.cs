@@ -5,6 +5,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
+using Newtonsoft.Json;
+using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace DistriLab2.Controllers
 {
@@ -16,24 +21,49 @@ namespace DistriLab2.Controllers
         private static string TEXT_ALERT_STUDENT_NOT_FOUND = "ESTUDIANTE NO ENCONTRADO";
         private static string TEXT_ALERT_NDOCUMENT_REGISTERED = "DOCUMENTO DE ESTUDIANTE YA ESTA REGISTRADO";
         private readonly dblab2Context _context;
+        private readonly IDistributedCache _cache;
 
-        public StudentController(dblab2Context context)
+        public StudentController(dblab2Context context, IDistributedCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         [HttpGet]
-        [Route("getStudent")]
-        public ActionResult<Student> GetPerson()
+        [Route("getStudent")]   
+
+        public async Task<IActionResult> GetPerson()
         {
+            var studentsFromRedis = await _cache.GetAsync("getStudents");
+            if ((studentsFromRedis?.Length ?? 0) > 0)
+            {
+                var studentsString = Encoding.UTF8.GetString(studentsFromRedis);
+                var students = JsonSerializer.Deserialize<List<Student>>(studentsString);
+                return Ok(new { IsRedis = true, Data = students });
+            }
+
             var client = _context.Students.Take(500).ToList();
-            return Ok(client);
+            var stringStudents = JsonSerializer.Serialize(client);
+            var studentsArr = Encoding.UTF8.GetBytes(stringStudents);
+
+            var cacheOptions = new DistributedCacheEntryOptions();
+
+            // Asignar una fecha de expiración absoluta (10 minutos desde el momento actual)
+            cacheOptions.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
+
+            // O asignar una fecha de expiración relativa (10 minutos después de la última vez que se accedió)
+            //cacheOptions.SlidingExpiration = TimeSpan.FromMinutes(10);
+
+            await _cache.SetAsync("getStudents", studentsArr, cacheOptions);
+            return Ok(new { IsRedis = false, Data = client });
         }
+
 
         [HttpGet]
         [Route("getStudenttNormal")]
         public ActionResult<List<Student>> GetStudentNormal()
         {
+
             try
             {
                 var client = _context.Students.OrderBy(sub => sub.FirstNameStudent).ToList();
@@ -179,125 +209,6 @@ namespace DistriLab2.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(_studentAux);
-        }
-
-        /*[HttpPatch]
-        [Route("updateStudent/{codStudent}")]
-        public async Task<IActionResult> updateInscriptionCodeStudent(int codStudent, JsonPatchDocument<Student>student)
-        {
-            try
-            {
-                var _studentAux = await _context.Students.FindAsync(codStudent);
-                if (_studentAux == null)
-                {
-                    return BadRequest(TEXT_ALERT_STUDENT_NOT_FOUND);
-                }else
-                if(student.FirstNameStudent !="")
-                    _studentAux.FirstNameStudent = student.FirstNameStudent;
-                if (student.LastNameStudent != "")
-                    _studentAux.LastNameStudent = student.LastNameStudent;
-                if (student.TypeDocument != "")
-                    _studentAux.TypeDocument = student.TypeDocument;
-                if (student.NumDocument != "")
-                    _studentAux.NumDocument = student.NumDocument;
-                if (student.StatusStudent != "")
-                    _studentAux.StatusStudent = student.StatusStudent;
-                if (student.GenderStudent != "")
-                    _studentAux.GenderStudent = student.GenderStudent;
-
-
-
-
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }*/
-        [HttpPatch]
-        [Route("updateNameStudent/{CodStudent}")]
-        public async Task<IActionResult> updateNameStudent(int CodStudent, string FirstNameStudent)
-        {
-            try
-            {
-                var student = await _context.Students.FindAsync(CodStudent);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                student.FirstNameStudent = FirstNameStudent;
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPatch]
-        [Route("updateLastNameStudent/{CodStudent}")]
-        public async Task<IActionResult> updateLastNameStudent(int CodStudent, string LastNameStudent)
-        {
-            try
-            {
-                var student = await _context.Students.FindAsync(CodStudent);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                student.LastNameStudent = LastNameStudent;
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPatch]
-        [Route("updateTypeDocumentStudent/{CodStudent}")]
-        public async Task<IActionResult> updateTypeDocumentStudent(int CodStudent, string TypeDocument)
-        {
-            try
-            {
-                var student = await _context.Students.FindAsync(CodStudent);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                student.TypeDocument = TypeDocument;
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPatch]
-        [Route("updateNumDocumentStudent/{CodStudent}")]
-        public async Task<IActionResult> updateNumDocumentStudent(int CodStudent, string NumDocument)
-        {
-            try
-            {
-                var student = await _context.Students.FindAsync(CodStudent);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                student.NumDocument = NumDocument;
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpPatch]
