@@ -10,10 +10,11 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Text.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using DistriLab2.Service;
 
 namespace DistriLab2.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class StudentController : ControllerBase
@@ -21,20 +22,50 @@ namespace DistriLab2.Controllers
         private static string TEXT_ALERT_STUDENT_NOT_FOUND = "ESTUDIANTE NO ENCONTRADO";
         private static string TEXT_ALERT_NDOCUMENT_REGISTERED = "DOCUMENTO DE ESTUDIANTE YA ESTA REGISTRADO";
         private readonly dblab2Context _context;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
 
-        public StudentController(dblab2Context context, IDistributedCache cache)
+        public StudentController(dblab2Context context, ICacheService cache)
         {
             _context = context;
             _cache = cache;
         }
 
         [HttpGet]
-        [Route("getStudent")]   
+        [Route("getStudent")]
 
         public async Task<IActionResult> GetPerson()
         {
-            var studentsFromRedis = await _cache.GetAsync("getStudents");
+            var cacheData = _cache.GetData<IEnumerable<Student>>("getStudent");
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
+            cacheData = await _context.Students.Take(500).ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(10);
+            _cache.SetData<IEnumerable<Student>>("getStudent", cacheData, expireTime);
+            return Ok(new { IsRedis = false, data = cacheData });
+        }
+
+        [HttpGet]
+        [Route("getStudenttNormal")]
+        public async Task<ActionResult<List<Student>>> GetStudentNormalAsync()
+        {
+            var cacheData = _cache.GetData<IEnumerable<Student>>("getStuN");
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
+            cacheData = await _context.Students.Take(500).OrderBy(sub => sub.FirstNameStudent).ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(10);
+            _cache.SetData<IEnumerable<Student>>("getStuN", cacheData, expireTime);
+            return Ok(new { IsRedis = false, data = cacheData });        
+        }
+
+        /*[HttpGet]
+        [Route("getStudentFilterCod")]
+        public async Task<ActionResult<List<Student>>> GetStudentFilterCodAsync()
+        {
+            var studentsFromRedis = await _cache.GetAsync("getStudentFilterCod");
             if ((studentsFromRedis?.Length ?? 0) > 0)
             {
                 var studentsString = Encoding.UTF8.GetString(studentsFromRedis);
@@ -42,53 +73,22 @@ namespace DistriLab2.Controllers
                 return Ok(new { IsRedis = true, Data = students });
             }
 
-            var client = _context.Students.Take(500).ToList();
-            var stringStudents = JsonSerializer.Serialize(client);
-            var studentsArr = Encoding.UTF8.GetBytes(stringStudents);
-
-            var cacheOptions = new DistributedCacheEntryOptions();
-
-            // Asignar una fecha de expiración absoluta (10 minutos desde el momento actual)
-            cacheOptions.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
-
-            // O asignar una fecha de expiración relativa (10 minutos después de la última vez que se accedió)
-            //cacheOptions.SlidingExpiration = TimeSpan.FromMinutes(10);
-
-            await _cache.SetAsync("getStudents", studentsArr, cacheOptions);
-            return Ok(new { IsRedis = false, Data = client });
-        }
-
-
-        [HttpGet]
-        [Route("getStudenttNormal")]
-        public ActionResult<List<Student>> GetStudentNormal()
-        {
-
-            try
-            {
-                var client = _context.Students.OrderBy(sub => sub.FirstNameStudent).ToList();
-                return Ok(client);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("getStudentFilterCod")]
-        public ActionResult<List<Student>> GetStudentFilterCod()
-        {
             try
             {
                 var client = _context.Students.OrderBy(sub => sub.CodStudent).ToList();
-                return Ok(client);
+                var stringStudents = JsonSerializer.Serialize(client);
+                var studentsArr = Encoding.UTF8.GetBytes(stringStudents);
+                var cacheOptions = new DistributedCacheEntryOptions();
+                cacheOptions.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
+                await _cache.SetAsync("getStudentFilterCod", studentsArr, cacheOptions);
+                return Ok(new { IsRedis = false, data = client });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
+
         [HttpGet]
         [Route("getStudentDecending")]
         public ActionResult<List<Student>> GetStudentDecending()

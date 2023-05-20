@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using DistriLab2.Models.DB;
+using DistriLab2.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,11 +22,11 @@ builder.Services.AddCors(options => options.AddPolicy("AllowAngularOrigins",
                                                     .AllowAnyHeader()
                                                     .AllowAnyMethod()));
 
-builder.Services.AddScoped(_ => {
+/*builder.Services.AddScoped(_ => {
     return new BlobServiceClient(builder.Configuration.GetConnectionString("AzureBlobStorage"));
+});*/
 
-});
-
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 builder.Configuration.AddJsonFile("appsettings.json");
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -83,6 +84,12 @@ builder.Services.AddAuthentication(config =>
 
 var app = builder.Build();
 app.UseCors("AllowAngularOrigins");
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:4200")
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
