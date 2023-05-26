@@ -5,21 +5,25 @@ namespace DistriLab2.Models
 {
 	public class ResponseInscriptionJoin
 	{
-		public ResponseInscriptionJoin(int IdInscription, string FirstNameStudent,
-            string LastNameStudent, string NameSubject)
+		public ResponseInscriptionJoin(int idInscription, int codStudent,
+            string nameStudent, int codSubject, string nameSubject, string dateRegistration)
 		{
-            this.IdInscription = IdInscription;
-            this.FirstNameStudent = FirstNameStudent;
-            this.LastNameStudent = LastNameStudent;
-            this.NameSubject = NameSubject;
-		}
+            this.idInscription = idInscription;
+            this.codStudent = codStudent;
+            this.nameStudent = nameStudent;
+            this.codSubject = codSubject;
+            this.nameSubject = nameSubject;
+            this.dateRegistration = dateRegistration;
+        }
 
-        public int IdInscription { get; set; }
+        public int idInscription { get; set; }
 
-        public string FirstNameStudent { get; set; } = null!;
-        public string LastNameStudent { get; set; } = null!;
+        public int codStudent { get; set; }
+        public string nameStudent { get; set; } = null!;
 
-        public string NameSubject { get; set; } = null!;
+        public int codSubject { get; set; }
+        public string nameSubject { get; set; } = null!;
+        public string dateRegistration { get; set; } = null!;
     }
 }
 

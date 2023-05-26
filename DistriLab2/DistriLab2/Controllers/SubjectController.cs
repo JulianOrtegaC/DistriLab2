@@ -1,13 +1,15 @@
 ﻿using DistriLab2.Models;
 using DistriLab2.Models.DB;
+using DistriLab2.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DistriLab2.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("subject")]
     public class SubjectController : Controller
@@ -15,23 +17,31 @@ namespace DistriLab2.Controllers
 
 		private readonly dblab2Context dbSubjects;
         private int NUM_PAG = 10;
+        private readonly ICacheService _cache;
 
-        public SubjectController(dblab2Context context){
+        public SubjectController(dblab2Context context, ICacheService cache)
+        {
             dbSubjects = context;
+            _cache = cache;
         }
 
         [HttpGet]
         [Route("getSubject")]
-        public ActionResult<List<Subject>> GetSubjectsPags(int pagina){
-            try {
+        public async Task<IActionResult> GetSubjectsPags(int pagina) {
+            var cacheData = _cache.GetData<IEnumerable<Subject>>("getSubjects" + pagina);
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
+            try
+            {
                 var countSubjects = dbSubjects.Subjects.Count();
                 int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
                 int indiceInicio = (pagina - 1) * NUM_PAG;
-                var client = dbSubjects.Subjects.OrderBy(x => x.CodSubject)
-                                         .Skip(indiceInicio)
-                                         .Take(NUM_PAG)
-                                         .ToList();
-                return Ok(client);
+                cacheData = await dbSubjects.Subjects.OrderBy(x => x.CodSubject).Skip(indiceInicio).Take(NUM_PAG).ToListAsync(); ;
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubjects" + pagina, cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -39,18 +49,25 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectNormal")]
-        public ActionResult<List<Subject>> GetSubjectNormal(int pagina)
+        public async Task<IActionResult> GetSubjectNormal(int pagina)
         {
+            var cacheData = _cache.GetData<IEnumerable<Subject>>("getSubjectsN" + pagina);
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
             try
             {
                 var countSubjects = dbSubjects.Subjects.Count();
                 int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
                 int indiceInicio = (pagina - 1) * NUM_PAG;
-                var client = dbSubjects.Subjects.OrderBy(x => x.NameSubject)
+                cacheData = await dbSubjects.Subjects.OrderBy(x => x.NameSubject)
                                          .Skip(indiceInicio)
                                          .Take(NUM_PAG)
-                                         .ToList();
-                return Ok(client);
+                                         .ToListAsync();
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubjectsN" + pagina, cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }
             catch (Exception ex)
             {
@@ -60,18 +77,25 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectFilterState")]
-        public ActionResult<List<Subject>> GetSubjectFilterState(int pagina)
+        public async Task<IActionResult> GetSubjectFilterState(int pagina)
         {
+            var cacheData = _cache.GetData<IEnumerable<Subject>>("getSubjectsF" + pagina);
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
             try
             {
                 var countSubjects = dbSubjects.Subjects.Count();
                 int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
                 int indiceInicio = (pagina - 1) * NUM_PAG;
-                var client = dbSubjects.Subjects.OrderBy(x => x.StatusSubject)
+                cacheData = await dbSubjects.Subjects.OrderBy(x => x.StatusSubject)
                                          .Skip(indiceInicio)
                                          .Take(NUM_PAG)
-                                         .ToList();
-                return Ok(client);
+                                         .ToListAsync();
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubjectsF" + pagina, cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }
             catch (Exception ex)
             {
@@ -81,18 +105,25 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectFilterCod")]
-        public ActionResult<List<Subject>> GetSubjectFilterCod(int pagina)
+        public async Task<IActionResult> GetSubjectFilterCod(int pagina)
         {
+            var cacheData = _cache.GetData<IEnumerable<Subject>>("getSubjects" + pagina);
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
             try
             {
                 var countSubjects = dbSubjects.Subjects.Count();
                 int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
                 int indiceInicio = (pagina - 1) * NUM_PAG;
-                var client = dbSubjects.Subjects.OrderBy(x => x.CodSubject)
+                cacheData = await dbSubjects.Subjects.OrderBy(x => x.CodSubject)
                                          .Skip(indiceInicio)
                                          .Take(NUM_PAG)
-                                         .ToList();
-                return Ok(client);
+                                         .ToListAsync();
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubjects" + pagina, cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }
             catch (Exception ex)
             {
@@ -102,18 +133,25 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubjectDecending")]
-        public ActionResult<List<Subject>> GetSubjectDecending(int pagina)
+        public async Task<IActionResult> GetSubjectDecending(int pagina)
         {
+            var cacheData = _cache.GetData<IEnumerable<Subject>>("getSubjectsD" + pagina);
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
             try
             {
                 var countSubjects = dbSubjects.Subjects.Count();
                 int numPags = (int)Math.Ceiling((double)countSubjects / NUM_PAG);
                 int indiceInicio = (pagina - 1) * NUM_PAG;
-                var client = dbSubjects.Subjects.OrderByDescending(x => x.NameSubject)
+                cacheData = await dbSubjects.Subjects.OrderByDescending(x => x.NameSubject)
                                          .Skip(indiceInicio)
                                          .Take(NUM_PAG)
-                                         .ToList();
-                return Ok(client);
+                                         .ToListAsync();
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubjectsD" + pagina, cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }
             catch (Exception ex)
             {
@@ -123,11 +161,18 @@ namespace DistriLab2.Controllers
 
         [HttpGet]
         [Route("getSubject/{CodSubject}")]
-        public ActionResult<Subject> GetSubjectByCod(int CodSubject){
+        public async Task<IActionResult> GetSubjectByCod(int CodSubject){
+            var cacheData = _cache.GetData<Subject>("getSubject");
+            if (cacheData != null)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
             try
             {
-                var client = dbSubjects.Subjects.FindAsync(CodSubject);
-                return Ok(client);
+                cacheData = await dbSubjects.Subjects.FindAsync(CodSubject);
+                var expireTime = DateTimeOffset.Now.AddMinutes(2);
+                _cache.SetData("getSubject", cacheData, expireTime);
+                return Ok(new { IsRedis = false, data = cacheData });
             }
             catch (Exception ex)
             {

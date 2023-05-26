@@ -1,5 +1,6 @@
 ﻿using DistriLab2.Models;
 using DistriLab2.Models.DB;
+using DistriLab2.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace DistriLab2.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("inscripcion")]
     public class InscriptionController : Controller
@@ -19,19 +20,24 @@ namespace DistriLab2.Controllers
         private string TEXT_ALERT_SUBJECT = "LA MATERIA NO SE ENCUENTRA ACTIVA";
         private string TEXT_ALERT_READY_INSCRIPTION = "LA MATERIA YA SE ENCUENTRA INSCRITA";
         private string NOT_FOUND_INSCRIPTION = "LA INSCRIPCIÓN NO EXISTE";
-        private object idInscription;
+        private readonly ICacheService _cache;
 
-        public InscriptionController(dblab2Context context)
+        public InscriptionController(dblab2Context context, ICacheService cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         [HttpGet]
         [Route("getInscriptions")]
-        public ActionResult<ResponseInscriptionJoin> GetInscriptions()
+        public async Task<IActionResult> GetInscriptions()
         {
-
-            var resultado = (from c1 in _context.Inscriptions
+            var cacheData = _cache.GetData<IEnumerable<ResponseInscriptionJoin>>("getInscriptions");
+            if (cacheData != null && cacheData.Count() > 0)
+            {
+                return Ok(new { IsRedis = true, data = cacheData });
+            }
+            var resultado = await (from c1 in _context.Inscriptions
                              join c2 in _context.Students on c1.CodStudent equals c2.CodStudent
                              join c3 in _context.Subjects on c1.CodSubject equals c3.CodSubject
                              select new
@@ -42,30 +48,10 @@ namespace DistriLab2.Controllers
                                  codSubject = c1.CodSubject,
                                  nameSubject = c3.NameSubject,
                                  dateRegistration = c1.DateRegistration.ToString("dd/MM/yyyy")
-                              }).Take(200).ToList();
-            return Ok(resultado);
-        }
-
-        [HttpGet]
-        [Route("getInscriptionsN")]
-        public ActionResult<object> GetInscriptionsWithName()
-        {
-            using (var contexto = _context)
-            {
-                var inscripciones = contexto.Inscriptions
-                .Include(i => i.CodSubjectNavigation)
-                .Include(i => i.CodStudentNavigation).Take(20)
-                .ToList();
-
-                foreach (var inscripcion in inscripciones)
-                {
-                    inscripcion.CodSubjectNavigation = contexto.Subjects.SingleOrDefault(m => m.CodSubject == inscripcion.CodSubject);
-                    
-                    inscripcion.CodStudentNavigation = contexto.Students.SingleOrDefault(e => e.CodStudent == inscripcion.CodStudent);
-                }
-
-                return inscripciones;
-            }
+                              }).Take(4000).ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(2);
+            _cache.SetData("getInscriptions", resultado, expireTime);
+            return Ok(new { IsRedis = false, data = resultado });
         }
 
         [HttpGet]

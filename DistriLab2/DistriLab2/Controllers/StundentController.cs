@@ -61,61 +61,49 @@ namespace DistriLab2.Controllers
             return Ok(new { IsRedis = false, data = cacheData });        
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("getStudentFilterCod")]
         public async Task<ActionResult<List<Student>>> GetStudentFilterCodAsync()
         {
-            var studentsFromRedis = await _cache.GetAsync("getStudentFilterCod");
-            if ((studentsFromRedis?.Length ?? 0) > 0)
+            var cacheData = _cache.GetData<IEnumerable<Student>>("getStuFC");
+            if (cacheData != null && cacheData.Count() > 0)
             {
-                var studentsString = Encoding.UTF8.GetString(studentsFromRedis);
-                var students = JsonSerializer.Deserialize<List<Student>>(studentsString);
-                return Ok(new { IsRedis = true, Data = students });
+                return Ok(new { IsRedis = true, data = cacheData });
             }
-
-            try
-            {
-                var client = _context.Students.OrderBy(sub => sub.CodStudent).ToList();
-                var stringStudents = JsonSerializer.Serialize(client);
-                var studentsArr = Encoding.UTF8.GetBytes(stringStudents);
-                var cacheOptions = new DistributedCacheEntryOptions();
-                cacheOptions.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
-                await _cache.SetAsync("getStudentFilterCod", studentsArr, cacheOptions);
-                return Ok(new { IsRedis = false, data = client });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }*/
+            cacheData = await _context.Students.Take(500).OrderBy(sub => sub.CodStudent).ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(5);
+            _cache.SetData<IEnumerable<Student>>("getStuFC", cacheData, expireTime);
+            return Ok(new { IsRedis = false, data = cacheData });
+        }
 
         [HttpGet]
         [Route("getStudentDecending")]
-        public ActionResult<List<Student>> GetStudentDecending()
+        public async Task<ActionResult<List<Student>>> GetStudentDecendingAsync()
         {
-            try
+            var cacheData = _cache.GetData<IEnumerable<Student>>("getStuDe");
+            if (cacheData != null && cacheData.Count() > 0)
             {
-                var client = _context.Subjects.OrderByDescending(sub => sub.NameSubject).ToList();
-                return Ok(client);
+                return Ok(new { IsRedis = true, data = cacheData });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            cacheData = await _context.Students.Take(500).OrderByDescending(sub => sub.FirstNameStudent).ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(5);
+            _cache.SetData<IEnumerable<Student>>("getStuDe", cacheData, expireTime);
+            return Ok(new { IsRedis = false, data = cacheData });
         }
 
         // GET: api/Student/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-
-            if (student == null)
+            var cacheData = _cache.GetData<Student>("id");
+            if (cacheData != null)
             {
-                return NotFound();
+                return Ok(new { IsRedis = true, data = cacheData });
             }
-
-            return student;
+            cacheData = await _context.Students.FindAsync(id);
+            var expireTime = DateTimeOffset.Now.AddMinutes(5);
+            _cache.SetData<Student>("id", cacheData, expireTime);
+            return Ok(new { IsRedis = false, data = cacheData });
         }
 
         [HttpPost]
@@ -127,11 +115,12 @@ namespace DistriLab2.Controllers
             }
             else
             {
-
                 student.CodStudent = GenerarCodigo(_context);
                 _context.Students.Add(student);
                 await _context.SaveChangesAsync();
-
+                var cacheData = await _context.Students.Take(500).ToListAsync();
+                var expireTime = DateTimeOffset.Now.AddMinutes(10);
+                _cache.SetData<IEnumerable<Student>>("getStudent", cacheData, expireTime);
                 return CreatedAtAction(nameof(GetStudent), new { id = student.CodStudent }, student);
             }
         }
@@ -191,6 +180,9 @@ namespace DistriLab2.Controllers
             {
                 return NoContent();
             }
+            var cacheData = await _context.Students.ToListAsync();
+            var expireTime = DateTimeOffset.Now.AddMinutes(10);
+            _cache.SetData<IEnumerable<Student>>("getStudent", cacheData, expireTime);
             return Ok(update);
         }
 
@@ -231,28 +223,5 @@ namespace DistriLab2.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPatch]
-        [Route("updateGenderStudent/{CodStudent}")]
-        public async Task<IActionResult> updateGenderStudent(int CodStudent, string GenderStudent)
-        {
-            try
-            {
-                var student = await _context.Students.FindAsync(CodStudent);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                student.GenderStudent = GenderStudent;
-                await _context.SaveChangesAsync();
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
     }
 }
