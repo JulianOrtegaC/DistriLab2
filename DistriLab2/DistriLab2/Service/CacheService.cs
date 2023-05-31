@@ -9,7 +9,7 @@ namespace DistriLab2.Service
         private IDatabase _cacheDb;
         public CacheService()
         {
-            var configurationOptions = ConfigurationOptions.Parse("cacheUniversity.redis.cache.windows.net:6380,password=M6xT5dikQvSdIy87qLWLDEUQ0QGuWR6GaAzCaONPn5s=,ssl=True,abortConnect=False");
+            var configurationOptions = ConfigurationOptions.Parse("cacheUniversity2.redis.cache.windows.net:6380,password=gMBL5mV6jTFULGYVDQNVcmEZvY43GO1MbAzCaFALbmk=,ssl=True,abortConnect=False");
             configurationOptions.SyncTimeout = 40000; // Aumenta el tiempo de espera a 10 segundos
 
             var redisClient = ConnectionMultiplexer.Connect(configurationOptions);
