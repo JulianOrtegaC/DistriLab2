@@ -86,7 +86,7 @@ var app = builder.Build();
 app.UseCors("AllowAngularOrigins");
 app.UseCors(builder =>
 {
-    builder.WithOrigins("http://localhost:4200")
+    builder.WithOrigins("http://localhost:4200", "https://black-desert-0a806740f.3.azurestaticapps.net")
            .AllowAnyMethod()
            .AllowAnyHeader();
 });
