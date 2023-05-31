@@ -18,7 +18,7 @@ builder.Services.AddDbContext<dblab2Context>(options => {
 });
 builder.Services.AddCors(options => options.AddPolicy("AllowAngularOrigins",
                                     builder => builder.AllowAnyOrigin()
-                                                    .WithOrigins("https://black-bay-05044b510.3.azurestaticapps.net")
+                                                    .WithOrigins("https://black-desert-0a806740f.3.azurestaticapps.net")
                                                     .AllowAnyHeader()
                                                     .AllowAnyMethod()));
 
@@ -84,12 +84,7 @@ builder.Services.AddAuthentication(config =>
 
 var app = builder.Build();
 app.UseCors("AllowAngularOrigins");
-app.UseCors(builder =>
-{
-    builder.WithOrigins("https://black-desert-0a806740f.3.azurestaticapps.net")
-           .AllowAnyMethod()
-           .AllowAnyHeader();
-});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
